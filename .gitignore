@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.python-version
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+*.local
+
+# Logs / temporary files
+*.log
+tmp/
+temp/
+
+# Data files
+# Ignore raw and intermediate datasets by default.
+**/data/raw/
+**/data/interim/
+**/data/external/
+
+# Large generated outputs
+**/outputs/
+**/artifacts/
+**/models/
+
+# If processed data can be regenerated, ignore it as well.
+# Keep this commented out if you want versioned final datasets.
+# **/data/processed/
