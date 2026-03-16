@@ -1,36 +1,37 @@
 # Airbnb Price Prediction
 
-뉴욕 Airbnb 숙소 데이터를 기반으로 가격 예측을 위한 전처리와 feature engineering을 수행한 프로젝트입니다.  
-단순 숙소 메타데이터뿐 아니라 관광지 접근성, 지하철 접근성, 범죄 관련 지역 특성을 결합해 분석용 데이터셋을 구성했습니다.
+뉴욕 Airbnb 숙소 데이터를 기반으로 가격 예측을 수행한 프로젝트다. 단순 listing 정보뿐 아니라 관광지 접근성, 지하철 접근성, 범죄 관련 지역 특성을 결합해 파생변수를 만들고, 선형 회귀형 모델과 트리 기반 비선형 모델을 비교하였다.
 
 ## Project Goal
 
-- Airbnb 숙소 가격에 영향을 줄 수 있는 지역 기반 요인을 반영한 분석용 데이터셋 구축
-- 전처리, 결측치 처리, 이상치 처리, 로그 변환 과정을 체계적으로 정리
-- 추후 회귀/머신러닝 모델링에 바로 활용할 수 있는 최종 테이블 생성
+- Airbnb 숙소 가격에 영향을 주는 지역 기반 요인을 반영한 데이터셋 구축
+- 전처리, feature engineering, feature selection 과정을 체계적으로 정리
+- 선형 회귀형 모델과 비선형 트리 기반 모델을 비교해 최종 예측 모델 선정
 
 ## Data
 
 ### Raw data
 
-다음 원본 데이터들을 활용했습니다.
+주요 원본 데이터
 
 - `AB_NYC_2019.csv`
 - `nyc_attractions_verified.csv`
 - `nyc-transit-subway-entrance-and-exit-data.csv`
 
-원본(raw) 데이터는 용량 및 관리 측면 때문에 Git에는 포함하지 않고, 로컬에서만 관리합니다.
+raw 데이터는 `.gitignore`로 제외하고 로컬에서만 관리한다.
 
 ### Processed data
 
 - `data/processed/aribnb_final_df.csv`
+  - 전처리 및 feature engineering 결과
+- `data/processed/airbnb_preprocessed_df.csv`
+  - 전처리 결과 저장본
+- `data/processed/airbnb_linear_features_df.csv`
+  - 선형 회귀형 모델용 피처 세트
+- `data/processed/airbnb_tree_features_df.csv`
+  - 트리 기반 모델용 피처 세트
 
-최종 전처리 및 feature engineering이 반영된 분석용 데이터셋입니다.
-
-- 행 수: 48,895
-- 열 수: 45
-
-포트폴리오에서 결과를 바로 확인할 수 있도록 processed 데이터는 저장소에 포함했습니다.
+포트폴리오에서 결과를 바로 확인할 수 있도록 processed 데이터는 저장소에 포함했다.
 
 ## Project Structure
 
@@ -42,80 +43,121 @@ airbnb-price-prediction/
 ├── notebooks/
 │   ├── airbnb_preprocessing.ipynb
 │   ├── airbnb_feature_engineering.ipynb
-│   └── 은수님_vif_airbnb.ipynb
+│   ├── airbnb_feature_selection.ipynb
+│   ├── airbnb_modeling.ipynb
+│   ├── 최종 airbnb.ipynb
+│   ├── 최종_모델링_airbnb.ipynb
+│   ├── PREPROCESSING_NOTES.md
+│   ├── FEATURE_SELECTION_NOTES.md
+│   └── MODELING_NOTES.md
 └── README.md
 ```
 
 ## Workflow
 
-### 1. Data preprocessing
+### 1. Preprocessing
 
 `notebooks/airbnb_preprocessing.ipynb`
 
-주요 작업:
+주요 작업
 
-- `name`, `host_name` 결측치 처리
-- `last_review`, `reviews_per_month` 결측치 처리
-- 범죄 비율 관련 결측치 처리
-- 이상치 점검 및 처리
-- 가격 변수 log 변환
+- 결측치 처리
+- 이상치 제거
+- 로그 변환 컬럼 생성
+- 전처리 결과 저장
 
 ### 2. Feature engineering
 
-`notebooks/airbnb_feature_engineering.ipynb`
+`notebooks/airbnb_feature_engineering.ipynb`  
+`notebooks/최종 airbnb.ipynb`
 
-생성한 주요 파생 변수:
+생성한 주요 파생변수
 
 - 관광지 접근성
-- `attraction_count_2km`
+  - `attraction_count_2km`
+  - `attraction_count_3km`
+  - `distance_to_city_center`
+  - `is_manhattan`
+- 지하철 접근성
+  - `distance_to_nearest_station`
+  - `station_count_300m`
+  - `station_count_500m`
+  - `station_count_1km`
+- 범죄 관련 변수
+  - `crime_count_*`
+  - `felony_count_*`
+  - `misdemeanor_count_*`
+  - `night_crime_count_*`
+  - `felony_ratio_*`
+  - `misdemeanor_ratio_*`
+  - `night_crime_ratio_*`
+
+### 3. Feature selection
+
+`notebooks/airbnb_feature_selection.ipynb`
+
+- 선형 회귀형 모델용 피처 세트 구성
+- 트리 기반 모델용 피처 세트 구성
+- 상관계수, VIF, theme별 공선성 검토
+- 모델 유형에 따라 별도 데이터셋 저장
+
+선형 회귀형 모델용 최종 피처
+
 - `attraction_count_3km`
 - `distance_to_city_center`
-- `is_manhattan`
-
-- 지하철 접근성
-- `distance_to_nearest_station`
-- `station_count_300m`
-- `station_count_500m`
+- `neighbourhood_group_Manhattan`
+- `night_crime_ratio_2km`
+- `felony_count_2km`
+- `misdemeanor_ratio_2km`
 - `station_count_1km`
+- `log_distance_to_nearest_station`
+- `room_type_Private room`
+- `room_type_Shared room`
 
-- 범죄 관련 변수
-- `crime_count_0.5km`, `crime_count_1km`, `crime_count_2km`
-- `felony_count_*`
-- `misdemeanor_count_*`
-- `night_crime_count_*`
-- `felony_ratio_*`
-- `misdemeanor_ratio_*`
-- `night_crime_ratio_*`
+### 4. Modeling
 
-## Final Dataset
+`notebooks/airbnb_modeling.ipynb`  
+`notebooks/최종_모델링_airbnb.ipynb`
 
-최종 데이터셋 `aribnb_final_df.csv`에는 다음 범주의 변수가 포함됩니다.
+비교 모델
 
-- Airbnb 기본 listing 정보
-- 위치 정보 (`latitude`, `longitude`, `neighbourhood_group`, `neighbourhood`)
-- 숙소 운영 정보 (`room_type`, `minimum_nights`, `availability_365` 등)
-- 리뷰 관련 정보 (`number_of_reviews`, `reviews_per_month`)
-- 관광지, 지하철, 범죄 관련 파생 변수
+- 선형 회귀형 모델
+  - `Linear Regression`
+  - `Ridge`
+- 트리 기반 비선형 모델
+  - `Gradient Boosting`
+  - `XGBoost`
+  - `LightGBM`
 
-대표 컬럼:
+검증 방식
 
-- `price`
-- `attraction_count_2km`, `attraction_count_3km`
-- `distance_to_city_center`
-- `distance_to_nearest_station`
-- `station_count_300m`, `station_count_500m`, `station_count_1km`
-- `crime_count_0.5km`, `crime_count_1km`, `crime_count_2km`
-- `felony_ratio_0.5km`, `misdemeanor_ratio_1km`, `night_crime_ratio_2km`
+- `Train 80% / Test 20%`
+- `5-Fold Cross Validation`
+- `GridSearchCV` 기반 하이퍼파라미터 탐색
 
-## How to Use
+## Modeling Results
 
-1. raw 데이터를 `data/raw/` 아래에 준비합니다.
-2. `airbnb_preprocessing.ipynb`를 실행해 전처리를 수행합니다.
-3. `airbnb_feature_engineering.ipynb`를 실행해 지역 기반 파생 변수를 생성합니다.
-4. 결과물인 `data/processed/aribnb_final_df.csv`를 분석 또는 모델링에 사용합니다.
+최종 모델링 단계의 주요 결과
+
+| 모델 | Best CV Score | Test RMSE | Test MAE | Test R² |
+| --- | ---: | ---: | ---: | ---: |
+| LightGBM | 0.6507 | 0.3773 | 0.2844 | 0.6556 |
+| XGBoost | 0.6468 | 0.3798 | 0.2869 | 0.6509 |
+| Gradient Boosting | 0.6394 | 0.3851 | 0.2918 | 0.6412 |
+| Ridge | 0.5766 | 0.4172 | 0.3189 | 0.5789 |
+| Linear Regression | 0.5766 | 0.4172 | 0.3189 | 0.5789 |
+
+정리
+
+- `Linear Regression`은 baseline 및 해석용 모델로 활용
+- `LightGBM`은 최종 예측 성능 모델로 선정
+- `XGBoost`는 LightGBM과 유사한 성능을 보인 차선 모델
 
 ## Notes
 
-- raw 데이터는 `.gitignore`로 제외되어 있습니다.
-- processed 데이터는 포트폴리오 확인용으로 버전 관리합니다.
-- 추후 모델링 결과가 추가되면 성능 비교와 해석 섹션을 별도로 확장할 수 있습니다.
+- raw 데이터는 `.gitignore`로 제외되어 있다
+- processed 데이터는 포트폴리오 확인용으로 버전 관리한다
+- 각 단계별 설명은 아래 문서에 정리했다
+  - `notebooks/PREPROCESSING_NOTES.md`
+  - `notebooks/FEATURE_SELECTION_NOTES.md`
+  - `notebooks/MODELING_NOTES.md`

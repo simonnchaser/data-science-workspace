@@ -83,6 +83,12 @@
 
 - `../data/processed/airbnb_linear_features_df.csv`
 
+추가 정리
+
+- `log_price`와의 상관계수 절댓값이 `0.1`보다 낮은 변수는 선형 회귀형 모델의 핵심 후보군에서 우선 제외했다
+- 초기 전체 후보군에서는 일부 `neighbourhood_group` 더미 변수의 공선성이 높게 나타났기 때문에, location theme을 별도로 재검토한 뒤 `neighbourhood_group_Manhattan`만 유지했다
+- 최종 선형 회귀형 피처 세트는 해석 가능성과 다중공선성 관리에 초점을 맞춘 baseline용 세트다
+
 ## 4. 트리 모델용 피처 선택 원칙
 
 트리 기반 모델은 선형 모델보다 다중공선성에 덜 민감하고, 비선형 관계와 구간 분할을 통해 변수를 활용할 수 있다. 그래서 트리 모델용 피처 세트는 선형 모델보다 정보 보존을 우선했다.
@@ -100,7 +106,7 @@
 - 왜도가 큰 변수를 원본으로 넣어도 잘 작동하는 경우가 많음
 - 따라서 1차 실험은 "원본 변수 중심 + 넓은 정보 보존" 전략으로 시작
 
-## 5. 트리 모델용 1차 피처 세트
+## 5. 트리 모델용 피처 세트
 
 트리 모델용 데이터셋은 다음과 같은 방향으로 구성했다.
 
@@ -133,6 +139,33 @@
 출력 파일:
 
 - `../data/processed/airbnb_tree_features_df.csv`
+
+이후 최종 모델링 단계에서는 트리 기반 모델의 확장 피처 세트에 다음 정보가 함께 반영되었다.
+
+- 파생변수
+  - `night_crime_ratio_2km`
+  - `misdemeanor_ratio_2km`
+  - `felony_count_2km`
+  - `attraction_count_3km`
+  - `distance_to_city_center`
+  - `distance_to_nearest_station`
+  - `station_count_1km`
+- 위치 및 숙소 특성
+  - `latitude`
+  - `longitude`
+  - `availability_365`
+- 로그 변환 변수
+  - `log_minimum_nights`
+  - `log_number_of_reviews`
+  - `log_reviews_per_month`
+  - `log_calculated_host_listings_count`
+- 범주형 더미 변수
+  - `room_type_Private room`
+  - `room_type_Shared room`
+  - `neighbourhood_group_Brooklyn`
+  - `neighbourhood_group_Manhattan`
+  - `neighbourhood_group_Queens`
+  - `neighbourhood_group_Staten Island`
 
 ## 6. 정리
 

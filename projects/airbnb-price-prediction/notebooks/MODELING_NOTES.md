@@ -20,10 +20,17 @@
 
 - 파일: `../data/processed/airbnb_tree_features_df.csv`
 - 용도:
-  - `Gradient Boosting Regressor`
-  - `XGBoost Regressor`
+  - 트리 기반 모델의 1차 실험 데이터셋
 
 이 세트는 원본 변수와 반경 기반 파생변수를 더 넓게 유지한 상태로 구성되었다.
+
+최종 모델링 단계에서는 [`최종_모델링_airbnb.ipynb`](/Users/junhapark/data-science-workspace/projects/airbnb-price-prediction/notebooks/최종_모델링_airbnb.ipynb)에서 확장 피처 세트를 다시 구성해 아래 모델을 비교했다.
+
+- `Linear Regression`
+- `Ridge`
+- `Gradient Boosting`
+- `XGBoost`
+- `LightGBM`
 
 ## 2. 타깃 변수
 
@@ -101,31 +108,26 @@
 
 즉, 선형 모델은 최종 성능용 모델이라기보다 baseline과 해석용 기준 모델의 역할을 한다.
 
-## 6. 트리 모델 비교
+## 6. 최종 모델링 비교
 
-트리 모델용 데이터셋에서는 보다 넓은 변수 세트를 유지한 뒤, 트리 기반 회귀 모델의 성능을 비교했다.
+최종 모델링 단계에서는 확장 피처 세트를 바탕으로 `GridSearchCV`를 적용해 모델별 하이퍼파라미터를 탐색했다. `cv=5` 설정으로 5-Fold Cross Validation을 수행했고, `R²`를 기준으로 최적 조합을 선택한 뒤 test set 성능을 비교했다.
 
-비교 모델:
+### 최종 모델 비교 결과
 
-- `Gradient Boosting Regressor`
-- `XGBoost Regressor`
-
-### 트리 모델용 피처 세트 기준 교차검증 결과
-
-- `Gradient Boosting`
-  - `CV_RMSE_mean = 0.3983`
-  - `CV_MAE_mean = 0.3010`
-  - `CV_R2_mean = 0.6216`
-- `XGBoost`
-  - `CV_RMSE_mean = 0.3892`
-  - `CV_MAE_mean = 0.2936`
-  - `CV_R2_mean = 0.6385`
+| 모델 | Best CV Score | Test RMSE | Test MAE | Test R² |
+| --- | ---: | ---: | ---: | ---: |
+| LightGBM | 0.6507 | 0.3773 | 0.2844 | 0.6556 |
+| XGBoost | 0.6468 | 0.3798 | 0.2869 | 0.6509 |
+| Gradient Boosting | 0.6394 | 0.3851 | 0.2918 | 0.6412 |
+| Ridge | 0.5766 | 0.4172 | 0.3189 | 0.5789 |
+| Linear Regression | 0.5766 | 0.4172 | 0.3189 | 0.5789 |
 
 해석:
 
-- 트리 모델용 피처 세트를 사용했을 때 성능이 더 크게 개선되었다.
-- 이는 트리 기반 모델이 더 넓은 위치, 범죄, 반경 기반 정보를 효과적으로 활용했다는 뜻이다.
-- 최종 성능 기준에서는 `XGBoost`가 가장 우수했다.
+- 비선형 트리 기반 모델이 선형 회귀형 모델보다 전반적으로 더 우수한 성능을 보였다
+- `LightGBM`이 가장 높은 `Best CV Score`와 `Test R²`, 가장 낮은 오차를 기록해 최종 예측 성능 모델로 선정되었다
+- `XGBoost`는 LightGBM과 유사한 성능을 보인 차선 모델이었다
+- `Linear Regression`은 baseline 및 해석용 기준 모델로 유지하였다
 
 ## 7. 최종 모델 판단
 
@@ -134,20 +136,21 @@
 - 해석 및 baseline:
   - `Linear Regression`
 - 최종 예측 성능:
-  - `XGBoost` with tree feature set
+  - `LightGBM`
+- 차선 성능 모델:
+  - `XGBoost`
 
 즉, 프로젝트 구조상 가장 설득력 있는 결론은 아래와 같다.
 
 - 선형 회귀는 변수 선택 과정과 계수 해석에 적합한 기준 모델
 - 트리 기반 모델은 실제 예측 성능 개선에 더 적합
-- 최종 성능 기준으로는 `XGBoost`가 가장 좋은 회귀 모델
+- 최종 성능 기준으로는 `LightGBM`이 가장 좋은 회귀 모델
 
 ## 8. 다음 단계
 
 모델링 단계에서 이어서 할 수 있는 작업은 아래와 같다.
 
-- `XGBoost` feature importance 확인
+- `LightGBM` feature importance와 SHAP 결과 정리
 - 중요도가 낮은 변수 제거 후 재학습
-- `XGBoost` 하이퍼파라미터 튜닝
-- `LightGBM` 추가 비교
+- LightGBM과 XGBoost 추가 튜닝
 - README 또는 발표 자료용 성능 비교 표 정리
