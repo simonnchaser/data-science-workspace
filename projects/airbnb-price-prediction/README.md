@@ -43,14 +43,17 @@ airbnb-price-prediction/
 ├── notebooks/
 │   ├── airbnb_preprocessing.ipynb
 │   ├── airbnb_feature_engineering.ipynb
+│   ├── airbnb_hypothesis_testing.ipynb
 │   ├── airbnb_feature_selection.ipynb
 │   ├── airbnb_modeling.ipynb
 │   ├── 최종 airbnb.ipynb
 │   ├── 최종_모델링_airbnb.ipynb
 │   ├── FEATURE_ENGINEERING_NOTES.md
+│   ├── HYPOTHESIS_TESTING_NOTES.md
 │   ├── PREPROCESSING_NOTES.md
 │   ├── FEATURE_SELECTION_NOTES.md
-│   └── MODELING_NOTES.md
+│   ├── MODELING_NOTES.md
+│   └── RESULTS_INTERPRETATION_NOTES.md
 └── README.md
 ```
 
@@ -115,7 +118,17 @@ airbnb-price-prediction/
 - `room_type_Private room`
 - `room_type_Shared room`
 
-### 4. Modeling
+### 4. Hypothesis testing
+
+`notebooks/airbnb_hypothesis_testing.ipynb`
+
+- 자치구별 평균 가격 차이 검정
+- Manhattan vs Non-Manhattan t-test
+- 방 유형별 가격 차이 검정
+- 지하철 접근성, 범죄 수준, 관광지 수준에 대한 ANOVA
+- 시각화와 가설검정을 함께 수행해 EDA 결과를 통계적으로 확인
+
+### 5. Modeling
 
 `notebooks/airbnb_modeling.ipynb`  
 `notebooks/최종_모델링_airbnb.ipynb`
@@ -160,6 +173,8 @@ airbnb-price-prediction/
 - processed 데이터는 포트폴리오 확인용으로 버전 관리한다
 - 각 단계별 설명은 아래 문서에 정리했다
   - `notebooks/FEATURE_ENGINEERING_NOTES.md`
+  - `notebooks/HYPOTHESIS_TESTING_NOTES.md`
   - `notebooks/PREPROCESSING_NOTES.md`
   - `notebooks/FEATURE_SELECTION_NOTES.md`
   - `notebooks/MODELING_NOTES.md`
+  - `notebooks/RESULTS_INTERPRETATION_NOTES.md`
