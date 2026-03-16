@@ -47,6 +47,7 @@ airbnb-price-prediction/
 │   ├── airbnb_modeling.ipynb
 │   ├── 최종 airbnb.ipynb
 │   ├── 최종_모델링_airbnb.ipynb
+│   ├── FEATURE_ENGINEERING_NOTES.md
 │   ├── PREPROCESSING_NOTES.md
 │   ├── FEATURE_SELECTION_NOTES.md
 │   └── MODELING_NOTES.md
@@ -158,6 +159,7 @@ airbnb-price-prediction/
 - raw 데이터는 `.gitignore`로 제외되어 있다
 - processed 데이터는 포트폴리오 확인용으로 버전 관리한다
 - 각 단계별 설명은 아래 문서에 정리했다
+  - `notebooks/FEATURE_ENGINEERING_NOTES.md`
   - `notebooks/PREPROCESSING_NOTES.md`
   - `notebooks/FEATURE_SELECTION_NOTES.md`
   - `notebooks/MODELING_NOTES.md`
